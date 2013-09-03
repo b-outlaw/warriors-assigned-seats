@@ -21,6 +21,13 @@ jQuery(document).ready(function($) {
 
     }
 
+    function calculating() {
+        var randomNum = getRandomArbitary( 1, numDesks );
+        desks.eq( randomNum-1 ).css('opacity', '0.25').animate({
+            opacity: 1
+        }, 'fast');
+    }
+
     function disableForm() {
         $('button').attr('disabled', 'disabled');
         $('form').off('submit', function(event) {
@@ -31,12 +38,21 @@ jQuery(document).ready(function($) {
 
     $('form').on('submit', function(event) {
         event.preventDefault();
-        var uniqueDesk = getUniqueDesk();
-        desks.eq( uniqueDesk-1 ).text( nameField.val() );
-        usedNums.push( uniqueDesk );
-        if ( usedNums.length >= numDesks ) {
-            disableForm();
-        }
+
+        for (var i = 0; i < numDesks; i++) {
+            setTimeout(function() {
+                calculating();
+            }, 150*i);
+        };
+
+        setTimeout(function() {
+            var uniqueDesk = getUniqueDesk();
+            desks.eq( uniqueDesk-1 ).text( nameField.val() );
+            usedNums.push( uniqueDesk );
+            if ( usedNums.length >= numDesks ) {
+                disableForm();
+            }
+        }, 150*numDesks);
     });
 
 
