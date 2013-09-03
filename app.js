@@ -3,7 +3,8 @@ jQuery(document).ready(function($) {
     var desks = $('.desks').children(),
         numDesks = desks.length,
         nameField = $('#nameInput'),
-        usedNums = [];
+        usedNums = [],
+        v = document.getElementsByTagName("video")[0];
 
     function getRandomArbitary (min, max) {
         return Math.round(Math.random() * (max - min) + min);
@@ -22,6 +23,7 @@ jQuery(document).ready(function($) {
     }
 
     function calculating() {
+        v.play();
         var randomNum = getRandomArbitary( 1, numDesks );
         desks.eq( randomNum-1 ).css('opacity', '0.25').animate({
             opacity: 1
@@ -39,20 +41,22 @@ jQuery(document).ready(function($) {
     $('form').on('submit', function(event) {
         event.preventDefault();
 
-        for (var i = 0; i < numDesks; i++) {
+        for (var i = 0; i < numDesks*2; i++) {
             setTimeout(function() {
                 calculating();
             }, 150*i);
         };
 
         setTimeout(function() {
+            v.pause();
+            v.currentTime = 0;
             var uniqueDesk = getUniqueDesk();
             desks.eq( uniqueDesk-1 ).text( nameField.val() );
             usedNums.push( uniqueDesk );
             if ( usedNums.length >= numDesks ) {
                 disableForm();
             }
-        }, 150*numDesks);
+        }, 150*numDesks*2);
     });
 
 
