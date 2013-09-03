@@ -4,7 +4,8 @@ jQuery(document).ready(function($) {
         numDesks = desks.length,
         nameField = $('#nameInput'),
         usedNums = [],
-        v = document.getElementsByTagName("video")[0];
+        v0 = document.getElementsByTagName("video")[0];
+        v1 = document.getElementsByTagName("video")[1];
 
     function getRandomArbitary (min, max) {
         return Math.round(Math.random() * (max - min) + min);
@@ -19,15 +20,21 @@ jQuery(document).ready(function($) {
             return randomNum;
         }
         return getUniqueDesk();
+    }
 
+    function getRandomHex() {
+        return '#'+('00000'+(Math.random()*16777216<<0).toString(16)).substr(-6);
     }
 
     function calculating() {
-        v.play();
-        var randomNum = getRandomArbitary( 1, numDesks );
-        desks.eq( randomNum-1 ).css('opacity', '0.25').animate({
-            opacity: 1
-        }, 'fast');
+        var randomNum = getUniqueDesk();
+        desks.eq( randomNum-1 ).text(nameField.val());
+        desks.eq( randomNum-1 ).css({'backgroundColor': getRandomHex(), 'color': getRandomHex() }).animate({
+            backgroundColor: "#eee",
+            color: "#eee"
+        }, 'fast', function(){ 
+            desks.eq( randomNum-1 ).text('');
+        });
     }
 
     function disableForm() {
@@ -39,7 +46,13 @@ jQuery(document).ready(function($) {
 
 
     $('form').on('submit', function(event) {
+
         event.preventDefault();
+
+        var name = nameField.val();
+
+        v0.load();
+        v0.play();
 
         for (var i = 0; i < numDesks*2; i++) {
             setTimeout(function() {
@@ -48,9 +61,19 @@ jQuery(document).ready(function($) {
         };
 
         setTimeout(function() {
-            v.pause();
-            v.currentTime = 0;
+
             var uniqueDesk = getUniqueDesk();
+            console.log(name + ': ' + uniqueDesk);
+
+            desks.eq( uniqueDesk-1 ).css({'backgroundColor': getRandomHex() }).animate({
+                backgroundColor: "#eee",
+                color: "#000"
+            }, 'slow');
+
+            v0.pause();
+            v1.load();
+            v1.play();
+
             desks.eq( uniqueDesk-1 ).text( nameField.val() );
             usedNums.push( uniqueDesk );
             if ( usedNums.length >= numDesks ) {
@@ -60,7 +83,7 @@ jQuery(document).ready(function($) {
     });
 
 
-    window.OUTLAW = {
+    window.FEIGLAW = {
         "desks" : desks,
         "numDesks" : numDesks,
         "usedNums" : usedNums
