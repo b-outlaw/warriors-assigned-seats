@@ -21,17 +21,21 @@ jQuery(document).ready(function($) {
 
     }
 
+    function disableForm() {
+        $('button').attr('disabled', 'disabled');
+        $('form').off('submit', function(event) {
+            event.preventDefault();
+        });
+    }
+
 
     $('form').on('submit', function(event) {
         event.preventDefault();
-        if ( usedNums.length >= numDesks ) {
-            return false;
-        }
         var uniqueDesk = getUniqueDesk();
         desks.eq( uniqueDesk-1 ).text( nameField.val() );
         usedNums.push( uniqueDesk );
         if ( usedNums.length >= numDesks ) {
-            $('button').attr('disabled', 'disabled');
+            disableForm();
         }
     });
 
